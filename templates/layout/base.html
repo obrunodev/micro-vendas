@@ -8,6 +8,13 @@
 <body>
     {% if user.is_authenticated %}
         {% include "partials/navbar.html" %}
+        {% if not user.empresa_set.exists %}
+            <p>
+                Você precisa estar vinculado à uma empresa
+            </p>
+        {% else %}
+            Minha loja: {{ user.empresa_set.first }}
+        {% endif %}
     {% endif %}
     {% block content %}{% endblock content %}
 </body>
