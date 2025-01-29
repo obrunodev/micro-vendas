@@ -3,6 +3,9 @@
         <a href="{% url "dashboard:index" %}">Dashboard</a>
     </li>
     <li>
+        <a href="{% url "produtos:list" %}">Produtos</a>
+    </li>
+    <li>
         <form action="{% url "usuarios:logout" %}" method="post">
             {% csrf_token %}
             <button type="submit">Sair</button>

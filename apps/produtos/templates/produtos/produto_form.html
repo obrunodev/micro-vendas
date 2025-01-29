@@ -1,0 +1,21 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Novo produto{% endblock title %}
+
+{% block content %}
+
+    <h1>Novo produto</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">
+            {% if form.instance.id %}
+                Atualizar
+            {% else %}
+                Cadastrar
+            {% endif %}
+        </button>
+    </form>
+
+{% endblock content %}
