@@ -6,6 +6,9 @@
     <title>{% block title %}{% endblock title %} | Micro Vendas</title>
 </head>
 <body>
+    {% if user.is_authenticated %}
+        {% include "partials/navbar.html" %}
+    {% endif %}
     {% block content %}{% endblock content %}
 </body>
 </html>
