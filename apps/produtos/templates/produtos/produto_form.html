@@ -1,21 +1,25 @@
 {% extends "layout/base.html" %}
 
-{% block title %}Novo produto{% endblock title %}
+{% block title %}{% if form.instance.id %}Editar{% else %}Novo{% endif %} produto{% endblock title %}
 
 {% block content %}
+    {% include "partials/page_header.html" with page_section="Cadastro de produto" %}
 
-    <h1>Novo produto</h1>
+    <div class="card">
+        <div class="card-body">
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">
-            {% if form.instance.id %}
-                Atualizar
-            {% else %}
-                Cadastrar
-            {% endif %}
-        </button>
-    </form>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">
+                    {% if form.instance.id %}
+                        Atualizar
+                    {% else %}
+                        Cadastrar
+                    {% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
 
 {% endblock content %}
