@@ -1,0 +1,49 @@
+{% extends "layout/base.html" %}
+
+{% block title %}Pedido{% endblock title %}
+
+{% block content %}
+
+    <h1>Pedido</h1>
+
+    <form method="get">
+        <input type="text" name="q" placeholder="Buscar por nome do produto" value="{{ request.GET.q }}">
+        <a href="{% url "vendas:pedido" %}">Limpar</a>
+    </form>
+
+    <ul>
+        {% for produto in produtos %}
+            <li>
+                {{ produto.nome }} -
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="add_carrinho" value="{{ produto.id }}">Adicionar</button>
+                </form>
+            </li>
+        {% empty %}
+            {% if request.GET.q %}
+                <li>Nenhum produto encontrado.</li>
+            {% else %}
+                <li>Pesquise por um produto.</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    <h3>Produtos no carrinho</h3>
+
+    <ul>
+        {% for produto in carrinho.produtos.all %}
+            <li>{{ produto.produto.nome }} - R$ {{ produto.produto.preco_venda }}</li>
+        {% empty %}
+            <li>Nenhum produto foi adicionado ao carrinho ainda</li>
+        {% endfor %}
+    </ul>
+
+    <h4><strong>Valor total:</strong> R$ {{ carrinho.valor_total|default:0|floatformat:2 }}</h4>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="limpar_carrinho">Limpar carrinho</button>
+    </form>
+
+{% endblock content %}

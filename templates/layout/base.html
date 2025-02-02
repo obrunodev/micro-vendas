@@ -16,6 +16,7 @@
             Minha loja: {{ user.empresa_set.first }}
         {% endif %}
     {% endif %}
+    {% include "partials/messages.html" %}
     {% block content %}{% endblock content %}
 </body>
 </html>
