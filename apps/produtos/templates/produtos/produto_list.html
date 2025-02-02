@@ -3,39 +3,53 @@
 {% block title %}Produtos{% endblock title %}
 
 {% block content %}
+    {% include "partials/page_header.html" with page_section="Lista de produtos" %}
 
-    <h1>Lista de produtos</h1>
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <form method="get">
+                    <input
+                        class="form-control"
+                        type="text"
+                        name="q"
+                        placeholder="Busque por produto"
+                        value="{{ request.GET.q }}">
+                </form>
+                <a href="{% url "produtos:create" %}" class="btn btn-primary mb-3">Novo produto</a>
+            </div>
 
-    <a href="{% url "produtos:create" %}">Novo produto</a>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Produto</th>
-                <th>Preço de custo</th>
-                <th>Preço de venda</th>
-                <th>Quantidade</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for produto in produtos %}
-                <tr>
-                    <td>{{ produto.nome }}</td>
-                    <td>{{ produto.preco_custo }}</td>
-                    <td>{{ produto.preco_venda }}</td>
-                    <td>{{ produto.quantidade }}</td>
-                    <td>
-                        <a href="{% url "produtos:update" produto.id_unico produto.slug %}">Editar</a>
-                        <a href="{% url "produtos:delete" produto.id_unico produto.slug %}">Excluir</a>
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="4">Nenhum produto cadastrado.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Preço de custo</th>
+                        <th>Preço de venda</th>
+                        <th>Quantidade</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in produtos %}
+                        <tr>
+                            <td>{{ produto.nome }}</td>
+                            <td>R$ {{ produto.preco_custo }}</td>
+                            <td>R$ {{ produto.preco_venda }}</td>
+                            <td>{{ produto.quantidade }}</td>
+                            <td>
+                                <a href="{% url "produtos:update" produto.id_unico produto.slug %}">Editar</a>
+                                <a href="{% url "produtos:delete" produto.id_unico produto.slug %}">Excluir</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">Nenhum produto cadastrado.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% include "partials/pagination.html" %}
+        </div>
+    </div>
 
 {% endblock content %}

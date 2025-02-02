@@ -1,3 +1,4 @@
+from apps.produtos.forms import ProdutoForm
 from apps.produtos.models import Produto
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
@@ -18,7 +19,7 @@ class ProdutoListView(LoginRequiredMixin, ListView):
 
 class ProdutoCreateView(LoginRequiredMixin, CreateView):
     model = Produto
-    fields = ['nome', 'descricao', 'preco_custo', 'preco_venda', 'quantidade']
+    form_class = ProdutoForm
     success_url = reverse_lazy('produtos:list')
 
     def form_valid(self, form):
@@ -30,7 +31,7 @@ class ProdutoCreateView(LoginRequiredMixin, CreateView):
 
 class ProdutoUpdateView(LoginRequiredMixin, UpdateView):
     model = Produto
-    fields = ['nome', 'descricao', 'preco_custo', 'preco_venda', 'quantidade']
+    form_class = ProdutoForm
     success_url = reverse_lazy('produtos:list')
 
     def get_object(self, queryset = None):

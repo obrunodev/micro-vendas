@@ -3,47 +3,112 @@
 {% block title %}Pedido{% endblock title %}
 
 {% block content %}
-
-    <h1>Pedido</h1>
-
-    <form method="get">
-        <input type="text" name="q" placeholder="Buscar por nome do produto" value="{{ request.GET.q }}">
-        <a href="{% url "vendas:pedido" %}">Limpar</a>
-    </form>
-
-    <ul>
-        {% for produto in produtos %}
-            <li>
-                {{ produto.nome }} -
-                <form method="post">
-                    {% csrf_token %}
-                    <button type="submit" name="add_carrinho" value="{{ produto.id }}">Adicionar</button>
-                </form>
-            </li>
-        {% empty %}
-            {% if request.GET.q %}
-                <li>Nenhum produto encontrado.</li>
-            {% else %}
-                <li>Pesquise por um produto.</li>
-            {% endif %}
-        {% endfor %}
-    </ul>
-
-    <h3>Produtos no carrinho</h3>
-
-    <ul>
-        {% for produto in carrinho.produtos.all %}
-            <li>{{ produto.produto.nome }} - R$ {{ produto.produto.preco_venda }}</li>
-        {% empty %}
-            <li>Nenhum produto foi adicionado ao carrinho ainda</li>
-        {% endfor %}
-    </ul>
-
-    <h4><strong>Valor total:</strong> R$ {{ carrinho.valor_total|default:0|floatformat:2 }}</h4>
-
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="limpar_carrinho">Limpar carrinho</button>
-    </form>
+    {% include "partials/page_header.html" with page_section="Novo pedido" %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Buscar produtos</h4>
+                    <form method="get">
+                        <div class="d-flex align-items-center">
+                            <input
+                                type="text"
+                                name="q"
+                                class="form-control"
+                                placeholder="Buscar por nome do produto"
+                                value="{{ request.GET.q }}">
+                            <a href="{% url "vendas:pedido" %}" class="btn btn-primary">Limpar</a>
+                        </div>
+                    </form>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Valor</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for produto in produtos  %}
+                                <tr>
+                                    <td>{{ produto.nome }}</td>
+                                    <td>R$ {{ produto.preco_venda }}</td>
+                                    <td class="text-end">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <button
+                                                type="submit"
+                                                name="add_carrinho"
+                                                class="btn btn-success btn-sm"
+                                                value="{{ produto.id }}">Adicionar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">        
+                                        {% if request.GET.q %}
+                                            Nenhum produto encontrado.
+                                        {% else %}
+                                            Pesquise por um produto.
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h4>Produtos no carrinho</h4>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" name="limpar_carrinho" class="btn btn-secondary btn-sm">Limpar carrinho</button>
+                        </form>
+                    </div>
+    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Valor</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for produto in carrinho.produtos.all  %}
+                                <tr>
+                                    <td>{{ produto.produto.nome }}</td>
+                                    <td>R$ {{ produto.produto.preco_venda }}</td>
+                                    <td class="align-items-center">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-text btn-sm text-danger">
+                                                <i class='bx bx-trash'></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        Nenhum produto no carrinho.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                
+                    <h4><strong>Valor total:</strong> R$ {{ carrinho.valor_total|default:0|floatformat:2 }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock content %}
