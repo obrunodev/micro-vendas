@@ -17,7 +17,7 @@
                                 class="form-control"
                                 placeholder="Buscar por nome do produto"
                                 value="{{ request.GET.q }}">
-                            <a href="{% url "vendas:pedido" %}" class="btn btn-primary">Limpar</a>
+                            <a href="{% url "vendas:novo_pedido" %}" class="btn btn-primary">Limpar</a>
                         </div>
                     </form>
                     
@@ -35,7 +35,7 @@
                                     <td>{{ produto.nome }}</td>
                                     <td>R$ {{ produto.preco_venda }}</td>
                                     <td class="text-end">
-                                        <form method="post">
+                                        <form action="{% url "vendas:carrinho" %}" method="post">
                                             {% csrf_token %}
                                             <button
                                                 type="submit"
@@ -67,7 +67,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <h4>Produtos no carrinho</h4>
                         
-                        <form method="post">
+                        <form action="{% url "vendas:carrinho" %}" method="post">
                             {% csrf_token %}
                             <button type="submit" name="limpar_carrinho" class="btn btn-secondary btn-sm">Limpar carrinho</button>
                         </form>

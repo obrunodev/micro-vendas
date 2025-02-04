@@ -6,10 +6,12 @@ from shared.models import BaseModel
 
 
 class Venda(BaseModel):
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, blank=True, null=True)
     nome_cliente = models.CharField('Nome do cliente', max_length=255, blank=True, null=True)
     valor_total = models.DecimalField('Valor da venda', max_digits=10, decimal_places=2)
 
     class Meta:
+        ordering = ['-created_at']
         verbose_name = 'Venda'
         verbose_name_plural = 'Vendas'
     
@@ -47,7 +49,7 @@ class Carrinho(BaseModel):
     def adiciona_produto(self, produto):
         produtos_no_carrinho = self.produtos.all()
         if produto.id_unico in [p.produto.id_unico for p in produtos_no_carrinho]:
-            return False
+            return {'erro': 'Produto já está no carrinho!'}
         ProdutoCarrinho.objects.create(
             produto=produto,
             carrinho=self,
@@ -57,7 +59,7 @@ class Carrinho(BaseModel):
             for produto in self.produtos.all()
         ])
         self.save()
-        return True
+        return {'message': 'Produto adicionado ao carrinho!'}
 
 
 class ProdutoCarrinho(BaseModel):
