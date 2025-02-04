@@ -43,6 +43,21 @@ class Carrinho(BaseModel):
     
     def __str__(self):
         return f'Carrinho: {self.empresa} - {self.usuario}'
+    
+    def adiciona_produto(self, produto):
+        produtos_no_carrinho = self.produtos.all()
+        if produto.id_unico in [p.produto.id_unico for p in produtos_no_carrinho]:
+            return False
+        ProdutoCarrinho.objects.create(
+            produto=produto,
+            carrinho=self,
+        )
+        self.valor_total = sum([
+            produto.produto.preco_venda
+            for produto in self.produtos.all()
+        ])
+        self.save()
+        return True
 
 
 class ProdutoCarrinho(BaseModel):

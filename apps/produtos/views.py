@@ -1,5 +1,6 @@
 from apps.produtos.forms import ProdutoForm
 from apps.produtos.models import Produto
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -13,7 +14,7 @@ class ProdutoListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         usuario = self.request.user
-        empresa = usuario.empresa_set.first()  # FIXME Isso deverá ser multi empresa
+        empresa = usuario.empresa_set.first()
         return Produto.objects.filter(empresa=empresa)
 
 
@@ -26,6 +27,7 @@ class ProdutoCreateView(LoginRequiredMixin, CreateView):
         usuario = self.request.user
         empresa = usuario.empresa_set.first()
         form.instance.empresa = empresa
+        messages.success(self.request, 'Produto cadastrado com sucesso!')
         return super().form_valid(form)
 
 
@@ -39,6 +41,10 @@ class ProdutoUpdateView(LoginRequiredMixin, UpdateView):
         slug = self.kwargs['slug']
         return get_object_or_404(Produto, id_unico=id_unico, slug=slug)
 
+    def form_valid(self, form):
+        messages.success(self.request, 'Produto atualizado com sucesso!')
+        return super().form_valid(form)
+
 
 class ProdutoDeleteVIew(LoginRequiredMixin, DeleteView):
     model = Produto
@@ -48,3 +54,7 @@ class ProdutoDeleteVIew(LoginRequiredMixin, DeleteView):
         id_unico = self.kwargs['id_unico']
         slug = self.kwargs['slug']
         return get_object_or_404(Produto, id_unico=id_unico, slug=slug)
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Produto excluído com sucesso!')
+        return super().form_valid(form)

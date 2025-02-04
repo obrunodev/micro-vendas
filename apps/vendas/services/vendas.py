@@ -15,5 +15,5 @@ class VendasService:
         )
         return produtos
 
-    def finaliza_venda(self):
-        return {'message': 'Venda finalizada!'}
+    def finaliza_venda(self, carrinho):
+        ...
